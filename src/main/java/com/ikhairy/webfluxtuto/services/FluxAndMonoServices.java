@@ -129,4 +129,22 @@ public class FluxAndMonoServices {
         return Mono.just(APPLE)
                 .flatMapMany(s -> Flux.just(s.split("")));
     }
+
+    public Flux<String> fruitsFluxMerge() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS)
+                .delayElements(Duration.ofMillis(50));
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS)
+                .delayElements(Duration.ofMillis(75));;
+
+        return Flux.merge(fruitFlux, otherFruitFlux);
+    }
+
+    public Flux<String> fruitsFluxMergeWith() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS)
+                .delayElements(Duration.ofMillis(50));
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS)
+                .delayElements(Duration.ofMillis(75));;
+
+        return fruitFlux.mergeWith(otherFruitFlux);
+    }
 }

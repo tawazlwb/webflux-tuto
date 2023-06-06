@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -234,6 +235,30 @@ class FluxAndMonoServicesTest {
                 .toArray(String[]::new);
 
         Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsMonoConcatWith().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxMerge() {
+        List<String> fruits = Arrays.asList(FRUITS.get(0), OTHER_FRUITS.get(0), FRUITS.get(1), OTHER_FRUITS.get(1), FRUITS.get(2));
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxMerge().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxMergeWith() {
+        List<String> fruits = Arrays.asList(FRUITS.get(0), OTHER_FRUITS.get(0), FRUITS.get(1), OTHER_FRUITS.get(1), FRUITS.get(2));
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxMergeWith().log();
 
         StepVerifier.create(fruitsFluxConcat)
                 .expectNext(fruitsArray)
