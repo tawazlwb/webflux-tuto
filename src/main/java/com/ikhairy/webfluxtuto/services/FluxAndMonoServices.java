@@ -147,4 +147,13 @@ public class FluxAndMonoServices {
 
         return fruitFlux.mergeWith(otherFruitFlux);
     }
+
+    public Flux<String> fruitsFluxMergeSequential() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS)
+                .delayElements(Duration.ofMillis(50));
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS)
+                .delayElements(Duration.ofMillis(75));;
+
+        return Flux.mergeSequential(fruitFlux, otherFruitFlux);
+    }
 }

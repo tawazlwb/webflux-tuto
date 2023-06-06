@@ -264,4 +264,19 @@ class FluxAndMonoServicesTest {
                 .expectNext(fruitsArray)
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxMergeSequential() {
+        List<String> fruits = new ArrayList<>();
+        fruits.addAll(FRUITS);
+        fruits.addAll(OTHER_FRUITS);
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxMergeSequential().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
 }
