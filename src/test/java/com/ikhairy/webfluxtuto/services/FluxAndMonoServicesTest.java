@@ -329,4 +329,18 @@ class FluxAndMonoServicesTest {
                 .expectNext(fruit)
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxFilterDoOn() {
+        int length = 5;
+        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxFilterDoOn(length).log();
+        String[] fruits = FRUITS
+                .stream()
+                .filter(s -> s.length() > length)
+                .toArray(String[]::new);
+
+        StepVerifier.create(fruitsFluxFilter)
+                .expectNext(fruits)
+                .verifyComplete();
+    }
 }

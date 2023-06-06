@@ -191,4 +191,12 @@ public class FluxAndMonoServices {
 
         return fruit1.zipWith(fruit2, (first, second) -> first + second);
     }
+
+    public Flux<String> fruitsFluxFilterDoOn(int number) {
+        return Flux.fromIterable(FRUITS)
+                .filter(s -> s.length() > number)
+                .doOnNext(System.out::println)
+                .doOnSubscribe(subscription -> System.out.println(subscription.toString()))
+                .doOnComplete(() -> System.out.println("Completed"));
+    }
 }
