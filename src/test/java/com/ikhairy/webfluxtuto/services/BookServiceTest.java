@@ -24,10 +24,6 @@ class BookServiceTest {
         Flux<Book> books = bookService.getBooks();
 
         StepVerifier.create(books)
-                .expectNextCount(3)
-                .verifyComplete();
-
-        StepVerifier.create(books)
                 .assertNext(book -> {
                     assertEquals("Book One", book.getBookInfo().getTitle());
                     assertEquals(2, book.getReviews().size());
