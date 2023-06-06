@@ -95,6 +95,27 @@ public class FluxAndMonoServices {
                 );
     }
 
+    public Flux<String> fruitsFluxConcat() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS);
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS);
+
+        return Flux.concat(fruitFlux, otherFruitFlux);
+    }
+
+    public Flux<String> fruitsFluxConcatWith() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS);
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS);
+
+        return fruitFlux.concatWith(otherFruitFlux);
+    }
+
+    public Flux<String> fruitsMonoConcatWith() {
+        var fruit1 = Mono.just(FRUITS.get(0));
+        var fruit2 = Mono.just(FRUITS.get(1));
+
+        return fruit1.concatWith(fruit2);
+    }
+
     public Mono<String> fruitsMono() {
         return Mono.just(APPLE);
     }

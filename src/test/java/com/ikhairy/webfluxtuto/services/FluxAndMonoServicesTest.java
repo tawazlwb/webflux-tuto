@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -166,6 +167,7 @@ class FluxAndMonoServicesTest {
                 .toArray(String[]::new);
 
         Flux<String> fruitsFluxTransform = fluxAndMonoServices.fruitsFluxTransform(length).log();
+
         StepVerifier.create(fruitsFluxTransform)
                 .expectNext(fruits)
                 .verifyComplete();
@@ -175,6 +177,7 @@ class FluxAndMonoServicesTest {
     void fruitsFluxTransformDefaultIfEmpty() {
         int length = 10;
         Flux<String> fruitsFluxTransform = fluxAndMonoServices.fruitsFluxTransformDefaultIfEmpty(length).log();
+
         StepVerifier.create(fruitsFluxTransform)
                 .expectNext(DEFAULT)
                 .verifyComplete();
@@ -191,6 +194,49 @@ class FluxAndMonoServicesTest {
         Flux<String> fruitsFluxTransform = fluxAndMonoServices.fruitsFluxTransformSwitchIfEmpty(length).log();
         StepVerifier.create(fruitsFluxTransform)
                 .expectNext(otherFruits)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxConcat() {
+        List<String> fruits = new ArrayList<>();
+        fruits.addAll(FRUITS);
+        fruits.addAll(OTHER_FRUITS);
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxConcat().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxConcatWith() {
+        List<String> fruits = new ArrayList<>();
+        fruits.addAll(FRUITS);
+        fruits.addAll(OTHER_FRUITS);
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxConcatWith().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsMonoConcatWith() {
+        String[] fruitsArray = FRUITS.stream()
+                .limit(2)
+                .toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsMonoConcatWith().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
                 .verifyComplete();
     }
 }
