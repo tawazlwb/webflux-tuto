@@ -373,17 +373,21 @@ class FluxAndMonoServicesTest {
 
     @Test
     void fruitsFluxOnErrorMap() {
-        String[] fruits = IntStream.range(0, FRUITS.size())
-                .filter(i -> i !=1)
-                .mapToObj(FRUITS::get)
-                .toArray(String[]::new);
-
-        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorMap()
-                .log();
+        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorMap().log();
 
         StepVerifier.create(fruitsFluxFilter)
                 .expectNext(FRUITS.get(0))
                 .expectError(IllegalStateException.class)
+                .verify();
+    }
+
+    @Test
+    void fruitsFluxDoOnError() {
+        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxDoOnError().log();
+
+        StepVerifier.create(fruitsFluxFilter)
+                .expectNext(FRUITS.get(0))
+                .expectError(RuntimeException.class)
                 .verify();
     }
 }

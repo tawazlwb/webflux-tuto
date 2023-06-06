@@ -243,4 +243,19 @@ public class FluxAndMonoServices {
                     return new IllegalStateException("From onErrorMap");
                 });
     }
+
+    public Flux<String> fruitsFluxDoOnError() {
+        String[] fruits = FRUITS.toArray(String[]::new);
+
+        return Flux.just(fruits)
+                .index()
+                .map(object -> {
+                    if (object.getT1() == 1) {
+                        throw new RuntimeException("Exception occurred");
+                    }
+
+                    return object.getT2();
+                })
+                .doOnError(throwable -> System.out.println("From doOnError : " + throwable.getMessage()));
+    }
 }
