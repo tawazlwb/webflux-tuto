@@ -343,4 +343,15 @@ class FluxAndMonoServicesTest {
                 .expectNext(fruits)
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxOnErrorReturn() {
+        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorReturn()
+                .takeLast(1)
+                .log();
+
+        StepVerifier.create(fruitsFluxFilter)
+                .expectNext("Error")
+                .verifyComplete();
+    }
 }

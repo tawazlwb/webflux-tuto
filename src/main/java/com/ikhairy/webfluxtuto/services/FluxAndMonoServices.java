@@ -199,4 +199,12 @@ public class FluxAndMonoServices {
                 .doOnSubscribe(subscription -> System.out.println(subscription.toString()))
                 .doOnComplete(() -> System.out.println("Completed"));
     }
+
+    public Flux<String> fruitsFluxOnErrorReturn() {
+        String[] fruits = FRUITS.toArray(String[]::new);
+
+        return Flux.just(fruits)
+                .concatWith(Flux.error(new RuntimeException("Exception occurred")))
+                .onErrorReturn("Error");
+    }
 }
