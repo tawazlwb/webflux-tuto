@@ -8,6 +8,7 @@ import reactor.test.StepVerifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.ikhairy.webfluxtuto.services.FluxAndMonoServices.*;
@@ -352,6 +353,21 @@ class FluxAndMonoServicesTest {
 
         StepVerifier.create(fruitsFluxFilter)
                 .expectNext("Error")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorContinue() {
+        String[] fruits = IntStream.range(0, FRUITS.size())
+                .filter(i -> i !=1)
+                .mapToObj(FRUITS::get)
+                .toArray(String[]::new);
+
+        Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorContinue()
+                .log();
+
+        StepVerifier.create(fruitsFluxFilter)
+                .expectNext(fruits)
                 .verifyComplete();
     }
 }

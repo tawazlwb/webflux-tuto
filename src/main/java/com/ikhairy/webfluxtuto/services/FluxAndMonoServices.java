@@ -207,4 +207,22 @@ public class FluxAndMonoServices {
                 .concatWith(Flux.error(new RuntimeException("Exception occurred")))
                 .onErrorReturn("Error");
     }
+
+    public Flux<String> fruitsFluxOnErrorContinue() {
+        String[] fruits = FRUITS.toArray(String[]::new);
+
+        return Flux.just(fruits)
+                .index()
+                .map(object -> {
+                    if (object.getT1() == 1) {
+                         throw new RuntimeException("Exception occurred");
+                    }
+
+                     return object.getT2();
+                })
+                .onErrorContinue((throwable, o) -> {
+                    System.out.println("throwable : " + throwable);
+                    System.out.println("o : " + o);
+                });
+    }
 }
