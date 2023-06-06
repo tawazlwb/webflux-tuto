@@ -279,4 +279,54 @@ class FluxAndMonoServicesTest {
                 .expectNext(fruitsArray)
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxZip() {
+        List<String> fruits = Arrays.asList(FRUITS.get(0) + OTHER_FRUITS.get(0), FRUITS.get(1) + OTHER_FRUITS.get(1));
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxZip().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxZipWith() {
+        List<String> fruits = Arrays.asList(FRUITS.get(0) + OTHER_FRUITS.get(0), FRUITS.get(1) + OTHER_FRUITS.get(1));
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxZipWith().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxZipTuple() {
+        List<String> fruits = Arrays.asList(FRUITS.get(0) + OTHER_FRUITS.get(0) + VEGGIES.get(0), FRUITS.get(1) + OTHER_FRUITS.get(1) + VEGGIES.get(1));
+
+        String[] fruitsArray = fruits.toArray(String[]::new);
+
+        Flux<String> fruitsFluxConcat = fluxAndMonoServices.fruitsFluxZipTuple().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruitsArray)
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsMonoZipWith() {
+        String fruit = FRUITS.get(0) + FRUITS.get(1);
+
+        Mono<String> fruitsFluxConcat = fluxAndMonoServices.fruitsMonoZipWith().log();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext(fruit)
+                .verifyComplete();
+    }
 }

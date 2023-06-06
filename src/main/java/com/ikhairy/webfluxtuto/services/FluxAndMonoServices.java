@@ -13,6 +13,7 @@ public class FluxAndMonoServices {
     public static final String DEFAULT = "Default";
     public static final List<String> FRUITS = List.of("Mango", "Orange", "Banana");
     public static final List<String> OTHER_FRUITS = List.of("Pineapple", "Jack Fruit");
+    public static final List<String> VEGGIES = List.of("Potato", "Beans");
 
     public static void main(String[] args) {
         FluxAndMonoServices fluxAndMonoServices = new FluxAndMonoServices();
@@ -155,5 +156,39 @@ public class FluxAndMonoServices {
                 .delayElements(Duration.ofMillis(75));;
 
         return Flux.mergeSequential(fruitFlux, otherFruitFlux);
+    }
+
+    public Flux<String> fruitsFluxZip() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS)
+                .delayElements(Duration.ofMillis(50));
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS)
+                .delayElements(Duration.ofMillis(75));;
+
+        return Flux.zip(fruitFlux, otherFruitFlux, (first, second) -> first + second);
+    }
+
+    public Flux<String> fruitsFluxZipWith() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS)
+                .delayElements(Duration.ofMillis(50));
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS)
+                .delayElements(Duration.ofMillis(75));;
+
+        return fruitFlux.zipWith(otherFruitFlux, (first, second) -> first + second);
+    }
+
+    public Flux<String> fruitsFluxZipTuple() {
+        Flux<String> fruitFlux = Flux.fromIterable(FRUITS);
+        Flux<String> otherFruitFlux = Flux.fromIterable(OTHER_FRUITS);
+        Flux<String> veggiesFlux = Flux.fromIterable(VEGGIES);
+
+        return Flux.zip(fruitFlux, otherFruitFlux, veggiesFlux)
+                .map(objects -> objects.getT1() + objects.getT2() + objects.getT3());
+    }
+
+    public Mono<String> fruitsMonoZipWith() {
+        var fruit1 = Mono.just(FRUITS.get(0));
+        var fruit2 = Mono.just(FRUITS.get(1));
+
+        return fruit1.zipWith(fruit2, (first, second) -> first + second);
     }
 }
