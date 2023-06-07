@@ -5,9 +5,13 @@ import com.ikhairy.webfluxtuto.domain.BookInfo;
 import com.ikhairy.webfluxtuto.domain.Review;
 import com.ikhairy.webfluxtuto.domain.exception.BookException;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
 
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -39,6 +43,20 @@ public class BookService {
         var books = getBooks();
 
         return books.retry(3);
+    }
+
+    public Flux<Book> getBooksRetryWhen() {
+        RetryBackoffSpec retrySpec = getRetryBackoffSpec();
+        var books = getBooks();
+
+        return books.retryWhen(retrySpec);
+    }
+
+    private RetryBackoffSpec getRetryBackoffSpec() {
+        return Retry
+                .backoff(3, Duration.ofMillis(100))
+                .filter(throwable -> throwable instanceof BookException)
+                .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> Exceptions.propagate(retrySignal.failure()));
     }
 
     public Mono<Book> getBookById(long bookId) {
