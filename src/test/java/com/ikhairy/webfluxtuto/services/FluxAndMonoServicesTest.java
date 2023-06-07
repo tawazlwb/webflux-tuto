@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import reactor.tools.agent.ReactorDebugAgent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -375,6 +376,8 @@ class FluxAndMonoServicesTest {
     @Test
     void fruitsFluxOnErrorMap() {
         //Hooks.onOperatorDebug();
+        ReactorDebugAgent.init();
+        ReactorDebugAgent.processExistingClasses();
         Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorMap().log();
 
         StepVerifier.create(fruitsFluxFilter)

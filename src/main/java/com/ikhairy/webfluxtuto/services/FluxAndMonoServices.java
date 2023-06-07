@@ -231,7 +231,7 @@ public class FluxAndMonoServices {
 
         return Flux.just(fruits)
                 .index()
-                .checkpoint("Error Checkpoint 1")
+                //.checkpoint("Error Checkpoint 1")
                 .map(object -> {
                     if (object.getT1() == 1) {
                         throw new RuntimeException("Exception occurred");
@@ -239,7 +239,7 @@ public class FluxAndMonoServices {
 
                     return object.getT2();
                 })
-                .checkpoint("Error Checkpoint 2")
+                //.checkpoint("Error Checkpoint 2")
                 .onErrorMap(throwable -> {
                     System.out.println("throwable : " + throwable);
                     return new IllegalStateException("From onErrorMap");
