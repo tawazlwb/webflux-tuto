@@ -4,6 +4,7 @@ import com.ikhairy.webfluxtuto.domain.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,5 +42,13 @@ class BookServiceTest {
 
     @Test
     void getBookById() {
+        Mono<Book> book = bookService.getBookById(1);
+
+        StepVerifier.create(book)
+                .assertNext(b -> {
+                    assertEquals("Book One", b.getBookInfo().getTitle());
+                    assertEquals(2, b.getReviews().size());
+                })
+                .verifyComplete();
     }
 }

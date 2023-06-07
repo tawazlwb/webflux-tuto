@@ -11,16 +11,16 @@ import java.util.List;
 
 @Slf4j
 public class BookService {
-    private final BookInfoService bookService;
+    private final BookInfoService bookInfoService;
     private final ReviewService reviewService;
 
-    public BookService(BookInfoService bookService, ReviewService reviewService) {
-        this.bookService = bookService;
+    public BookService(BookInfoService bookInfoService, ReviewService reviewService) {
+        this.bookInfoService = bookInfoService;
         this.reviewService = reviewService;
     }
 
     public Flux<Book> getBooks() {
-        var books = bookService.getBooks();
+        var books = bookInfoService.getBooks();
 
         return books
                 .flatMap(book -> {
@@ -30,9 +30,12 @@ public class BookService {
                 .log();
     }
 
-    public Mono<BookInfo> getBookById(long bookId) {
-        BookInfo bookInfo = new BookInfo(bookId, "Book One", "Author One", "12121212");
+    public Mono<Book> getBookById(long bookId) {
+        Mono<BookInfo> bookInfo = bookInfoService.getBookById(bookId);
+        Mono<List<Review>> reviews = reviewService.getReviews(bookId).collectList();
 
-        return Mono.just(bookInfo);
+        return Mono
+                .zip(bookInfo, reviews, Book::new)
+                .log();
     }
 }
