@@ -2,6 +2,7 @@ package com.ikhairy.webfluxtuto.services;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -373,6 +374,7 @@ class FluxAndMonoServicesTest {
 
     @Test
     void fruitsFluxOnErrorMap() {
+        //Hooks.onOperatorDebug();
         Flux<String> fruitsFluxFilter = fluxAndMonoServices.fruitsFluxOnErrorMap().log();
 
         StepVerifier.create(fruitsFluxFilter)
