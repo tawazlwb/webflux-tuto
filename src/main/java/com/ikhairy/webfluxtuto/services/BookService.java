@@ -3,6 +3,7 @@ package com.ikhairy.webfluxtuto.services;
 import com.ikhairy.webfluxtuto.domain.Book;
 import com.ikhairy.webfluxtuto.domain.BookInfo;
 import com.ikhairy.webfluxtuto.domain.Review;
+import com.ikhairy.webfluxtuto.domain.exception.BookException;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,6 +27,10 @@ public class BookService {
                 .flatMap(book -> {
                     Mono<List<Review>> reviews = reviewService.getReviews(book.getBookId()).collectList();
                     return reviews.map(review -> new Book(book, review));
+                })
+                .onErrorMap(throwable -> {
+                    log.error("Exception occurred : ", throwable);
+                    return new BookException("Exception occurred while fetching Books");
                 })
                 .log();
     }
