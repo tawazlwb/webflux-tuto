@@ -48,4 +48,16 @@ class BookServiceMockTest {
                 .expectError(BookException.class)
                 .verify();
     }
+
+    @Test
+    void getBooksMockOnErrorRetry() {
+        Mockito.when(bookInfoService.getBooks()).thenCallRealMethod();
+        Mockito.when(reviewService.getReviews(Mockito.anyLong())).thenThrow(new IllegalStateException("Exception using test"));
+
+        Flux<Book> books = bookService.getBooksRetry();
+
+        StepVerifier.create(books)
+                .expectError(BookException.class)
+                .verify();
+    }
 }

@@ -35,6 +35,12 @@ public class BookService {
                 .log();
     }
 
+    public Flux<Book> getBooksRetry() {
+        var books = getBooks();
+
+        return books.retry(3);
+    }
+
     public Mono<Book> getBookById(long bookId) {
         Mono<BookInfo> bookInfo = bookInfoService.getBookById(bookId);
         Mono<List<Review>> reviews = reviewService.getReviews(bookId).collectList();
